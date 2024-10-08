@@ -2,13 +2,17 @@
 
 The European Food Safety Authority (EFSA) has recently defined [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), and released the EFSA One Health WGS analytical pipeline for the analysis of whole-genome sequencing (WGS) data of Salmonella enterica, Listeria monocytogenes and Escherichia coli. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
 
-This repository contains a surveillance-oriented script that facilitates the local deployment of the EFSA's Whole Genome Sequencing OneHealth analytical pipeline by:
+## Motivation
 
-- allowing **multiple samples** as input (**batch analysis**)
+Facilitate the deployment of the EFSA's Whole Genome Sequencing OneHealth analytical pipeline in a local setting through an easy-to-use and surveillance-oriented script that: 
+
+- allows **multiple samples** as input (**batch analysis**)
   
-- compiling the results of individual samples into user- and surveillance-oriented **tabular reports**
+- **compiles the results of individual samples** into user- and surveillance-oriented **tabular reports**
  
-- enabling the integration of results of previous runs for routine genomic surveillance, i.e., **cumulative analysis** of growing datasets.
+- enables the integration of results of previous runs for routine genomic surveillance, i.e., **cumulative analysis** of growing datasets.
+
+This implementation can be useful for laboratories that want to: i) implement the EFSA pipeline in their routine activities; ii) perform sample submission by programmatic access to the EFSA One Health WGS System; and/or, iii) compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
 
 ## Input
 
