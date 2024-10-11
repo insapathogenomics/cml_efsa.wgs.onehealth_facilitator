@@ -15,17 +15,19 @@ With the aim of facilitating the deployment of the EFSA One Health WGS analytica
 This implementation can be useful for laboratories that want to: i) implement the EFSA pipeline in their routine activities; ii) perform sample submission by programmatic access to the EFSA One Health WGS System; iii) perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal; and iv) compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
 
 ## Installation and dependencies
-This script facilitates the deployment of the EFSA One Health WGS analytical pipeline but it does not substitutes this pipeline. Therefore, before installing everything you need to run this script, **you must install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
+This script facilitates the deployment of the EFSA One Health WGS analytical pipeline but it does not substitutes this pipeline. Therefore, before installing everything that you need to run this script, **you must install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
 
-0. Briefly, you will need:
+Briefly, you will need:
 - A Linux computer or a Windows computer with WSL 
 - Git - to clone the EFSA One Health WGS analytical workflow and the Docker repositories
-- Docker - to build and then run the Docker images)
+- Docker - to build and then run the Docker images
 - Conda - to install the environment with which you will run the script provided in this repository
 
 _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda environment provided in this repository includes a Nextflow package. Therefore, you do not need to install it before._
 
-1. After installing the EFSA One Health WGS analytical pipeline, you should nevigate to the directory where you cloned the workflow, and perform a clone of this repository:
+**0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _nextflow.config_ for each species, including providing the right schema location)
+  
+**1. Navigate to the directory where you cloned the workflow, clone of this repository and install the conda environment:**
 ```
 cd /PATH/TO/efsa.wgs.onehealth/
 git clone https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator.git
@@ -33,23 +35,23 @@ cd cml_efsa.wgs.onehealth_facilitator/
 conda env create --name efsa_workflow --file=workflow_environment.yml
 ```
 
-2. Activate conda environment
+**2. Activate conda environment**
 ```
 conda activate efsa_workflow
 ```
 
-3. Run the command line of the EFSA WGS One Health facilitator:
+**3. Run the command line of the EFSA WGS One Health facilitator:**
 ```
 python efsa_wgs_onehealth_facilitator.py -v
 ```
 
 ## Input
 
-**Directory with paired-end Illumina FASTQ files** (sample names will be inferred from FASTQ name until the first underscore "_")
+**Directory with paired-end Illumina FASTQ files** (sample names will be inferred from the FASTQ name until the first underscore "_")
 
 OR
 
-**Table in .tsv format with sample name and FASTQ location** (template is provided)
+**Table in .tsv format with sample name and FASTQ location** (a template is provided in this repository)
 
 *NOTE: Optionally, the directory of a previous run can be indicated for cumulative downstream analysis.*
 
@@ -78,7 +80,7 @@ OUTPUT/ # Folder where the different runs are stored (it must already exist). In
         |___Sample1_R*.fastq.gz # Copy of the fastq files provided by the user.
         |___efsa_output/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
  ```
-
+The directory with the fastq files or the template.tsv with all sample information can be placed anywhere in your computer. You just need to indicate the full path.
 ## Examples
 
 In the _examples/_ folder we provide a set of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) for _L. monocytogenes_, _S. enterica_ and _E.coli_ that can be used to try the script. Here, we provide command line examples for the _S. enterica_ data.
