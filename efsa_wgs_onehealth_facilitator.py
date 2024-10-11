@@ -132,7 +132,6 @@ def join_reports_efsa_parser(out_dir, sample_dirs, run_name):
 			dir_to_sample[sample_name] = sample_dir
 		elif counter == 0:
 			failed[sample_name] = directory
-
 	if len(dir_to_sample.keys()) > 0:
 		output_file = out_dir + "/" + run_name + "/" + run_name + "_report.xlsx"
 		outputs_directory = out_dir + "/" + run_name
@@ -161,7 +160,7 @@ def prepare_final_reports(out_dir, run_name, failed, previous_run, run_successfu
 					for line in lines:
 						if "title" in line:
 							info = line.split("\"title\": \"")[1]
-							error = info.split("\"")[0]
+							error = "FAIL: " + str(info.split("\"")[0])
 							failed_df_tsv["Analysis_ID"].append(sample)
 							failed_df_tsv["QC_VOTE"].append(error)
 		failed_df_tsv = pandas.DataFrame(failed_df_tsv)
@@ -183,7 +182,10 @@ def prepare_final_reports(out_dir, run_name, failed, previous_run, run_successfu
 		for sample in summary_tsv["Analysis_ID"].values.tolist():
 			passed_qc.append("PASS")
 		summary_tsv.insert(1, "QC_VOTE", passed_qc)
-		summary_tsv = join_df(summary_tsv, failed_df_tsv)
+		if failed_df_tsv.empty:
+			summary_tsv = summary_tsv
+		else:
+			summary_tsv = join_df(summary_tsv, failed_df_tsv)
 
 	else:
 		summary_tsv = failed_df_tsv
@@ -311,14 +313,14 @@ def main():
 	group0.add_argument("-samples", "--samples", dest="sample_info", default="", type=str, help="TSV file with the indication of sample name and the \
 						complete PATH to fastq1 and fastq2 (sample\tfq1\tfq2). This argument is mandatory, if no '--fastq' is provided. Please note that \
 						no header is expected and sample names can follow any format as far as they do not have blank spaces ' '.")
-	group0.add_argument("-o", "--output", dest="output", default="", type=str, help="[MANDATORY] Directory where the results of each run are stored. Please \
-						do not include a final slash '/' in the directory name.")
+	group0.add_argument("-o", "--output", dest="output", default="", type=str, help="[MANDATORY] FULL PATH to the directory where the results of each run \
+						are stored. Please do not include a final slash '/' in the directory name.")
 	group0.add_argument("-r", "--run", dest="run_name", default="run_efsa", type=str, help="Name of the run (default: run_efsa).")
 	group0.add_argument("-s", "--species", dest="species", default="", type=str, help="[MANDATORY] Species name between quotation marks (currently only \
 					 	available for: 'listeria monocytogenes', 'salmonella enterica' and 'escherichia coli'). Please indicate the name of the species \
 						between quotation marks.")
 	group0.add_argument("-nf", "--nextflow-config", dest="nextflow_config", default="", type=str, help="[MANDATORY] Full PATH to the nextflow config.")
-	group0.add_argument("--previous-run", dest="previous_run", default="", type=str, help="Full path to a previous run (the reports of the present run \
+	group0.add_argument("--previous-run", dest="previous_run", default="", type=str, help="[OPTIONAL] FULL PATH to a previous run (the reports of the present run \
 					 	will be added to the reports of this previous run). Please do not include a final slash '/' in the directory name.")
 	
 	args = parser.parse_args()
