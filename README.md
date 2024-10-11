@@ -165,5 +165,49 @@ The combined reports of this tool can be used for downstream clustering analysis
 python reportree.py 
 ```
 
+## Usage
+```
+optional arguments:
+  -h, --help            show this help message and exit
 
+Version:
+  efsa_wgs_onehealth_facilitator.py
 
+  -v, --version         Print version and exit
+
+Input/Output:
+  Input/Output specifications
+
+  -f FASTQ, --fastq FASTQ
+                        Directory with the fastq files for this run. Sample names will be inferred from the FASTQ name until the first underscore '_'.
+                        This argument is mandatory if no '--sample-info' is provided.
+  -samples SAMPLE_INFO, --samples SAMPLE_INFO
+                        TSV file with the indication of sample name and the complete PATH to fastq1 and fastq2 (sample fq1 fq2). This argument is
+                        mandatory, if no '--fastq' is provided. Please note that no header is expected and sample names can follow any format as far as
+                        they do not have blank spaces ' '.
+  -o OUTPUT, --output OUTPUT
+                        [MANDATORY] FULL PATH to the directory where the results of each run are stored. Please do not include a final slash '/' in the
+                        directory name.
+  -r RUN_NAME, --run RUN_NAME
+                        Name of the run (default: run_efsa).
+  -s SPECIES, --species SPECIES
+                        [MANDATORY] Species name between quotation marks (currently only available for: 'listeria monocytogenes', 'salmonella enterica'
+                        and 'escherichia coli'). Please indicate the name of the species between quotation marks.
+  -nf NEXTFLOW_CONFIG, --nextflow-config NEXTFLOW_CONFIG
+                        [MANDATORY] Full PATH to the nextflow config.
+  --previous-run PREVIOUS_RUN
+                        [OPTIONAL] FULL PATH to a previous run (the reports of the present run will be added to the reports of this previous run). Please
+                        do not include a final slash '/' in the directory name.
+```
+
+#### Technical notes
+
+From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advice that you do launch this script in parallel in the same machine.
+
+## Citation
+
+If you use this tool, **please do not forget to cite this repository!**
+
+## Funding
+
+This work was funded by national funds through FCT - Foundation for Science and Technology, I.P., in the frame of Individual CEEC 2022.00851.CEECIND/CP1748/CT0001 (PathoGenSurveil) and by the project "Sustainable use and integration of enhanced infrastructure into routine genome-based surveillance and outbreak investigation activities in Portugal" ([GENEO](https://www.insa.min-saude.pt/category/projectos/geneo/)) on behalf of the EU4H programme (EU4H-2022-DGA-MS-IBA-1).
