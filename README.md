@@ -12,7 +12,12 @@ With the aim of facilitating the deployment of the EFSA One Health WGS analytica
  
 - enables the integration of results of previous runs for routine genomic surveillance, i.e., can perform the **cumulative analysis** of growing datasets.
 
-This implementation can be useful for laboratories that want to: i) implement the EFSA pipeline in their routine activities; ii) perform sample submission by programmatic access to the EFSA One Health WGS System; iii) perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal; and iv) compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
+This implementation can be useful for laboratories that want to: 
+
+- implement the EFSA pipeline in their routine activities;
+- perform sample submission by programmatic access to the EFSA One Health WGS System; 
+- perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal;
+- compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
 
 ## Installation and dependencies
 This script facilitates the deployment of the EFSA One Health WGS analytical pipeline, so **you must first install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
@@ -208,7 +213,7 @@ From our experience, performing parallel analyses with the EFSA One Health WGS a
 
 If you use this tool, **please do not forget to cite this repository!**
 
-INSA PathoGenomics. 2023. Facilitator of the local deployment of the EFSA Whole-Genome Sequencing One Health analytical pipeline. https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator
+Verónica Mixão, João Dourado Santos, Vítor Borges. 2024. Facilitator of the local deployment of the EFSA Whole-Genome Sequencing One Health analytical pipeline. https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator
 
   
 ## Funding
