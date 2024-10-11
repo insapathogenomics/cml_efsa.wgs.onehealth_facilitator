@@ -202,12 +202,15 @@ Input/Output:
 
 #### Technical notes
 
-From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advice that you do launch this script in parallel in the same machine.
+From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
 
 ## Citation
 
 If you use this tool, **please do not forget to cite this repository!**
 
+INSA PathoGenomics. 2023. Facilitator of the local deployment of the EFSA Whole-Genome Sequencing One Health analytical pipeline. https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator
+
+  
 ## Funding
 
 This work was funded by national funds through FCT - Foundation for Science and Technology, I.P., in the frame of Individual CEEC 2022.00851.CEECIND/CP1748/CT0001 (PathoGenSurveil) and by the project "Sustainable use and integration of enhanced infrastructure into routine genome-based surveillance and outbreak investigation activities in Portugal" ([GENEO](https://www.insa.min-saude.pt/category/projectos/geneo/)) on behalf of the EU4H programme (EU4H-2022-DGA-MS-IBA-1).
