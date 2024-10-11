@@ -14,6 +14,35 @@ With the aim of facilitating the deployment of the EFSA One Health WGS analytica
 
 This implementation can be useful for laboratories that want to: i) implement the EFSA pipeline in their routine activities; ii) perform sample submission by programmatic access to the EFSA One Health WGS System; iii) perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal; and iv) compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
 
+## Installation and dependencies
+This script facilitates the deployment of the EFSA One Health WGS analytical pipeline but it does not substitutes this pipeline. Therefore, before installing everything you need to run this script, **you must install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
+
+0. Briefly, you will need:
+- A Linux computer or a Windows computer with WSL 
+- Git - to clone the EFSA One Health WGS analytical workflow and the Docker repositories
+- Docker - to build and then run the Docker images)
+- Conda - to install the environment with which you will run the script provided in this repository
+
+_Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda environment provided in this repository includes a Nextflow package. Therefore, you do not need to install it before._
+
+1. After installing the EFSA One Health WGS analytical pipeline, you should nevigate to the directory where you cloned the workflow, and perform a clone of this repository:
+```
+cd /PATH/TO/efsa.wgs.onehealth/
+git clone https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator.git
+cd cml_efsa.wgs.onehealth_facilitator/
+conda env create --name efsa_workflow --file=workflow_environment.yml
+```
+
+2. Activate conda environment
+```
+conda activate efsa_workflow
+```
+
+3. Run the command line of the EFSA WGS One Health facilitator:
+```
+python efsa_wgs_onehealth_facilitator.py -v
+```
+
 ## Input
 
 **Directory with paired-end Illumina FASTQ files** (sample names will be inferred from FASTQ name until the first underscore "_")
@@ -108,17 +137,15 @@ senterica/
         |___ERR10441976_*.fastq.gz
         |___efsa_folder_with_random_name/
 ```
+_NOTE: All the reports provided in test2/, as well as the allele hash, have the cumulative results of test1 and test2 runs._
 
 ## Clustering analysis with [ReporTree](https://github.com/insapathogenomics/ReporTree)
 
-The combined reports of this tool can be used for downstream clustering analysis using [ReporTree](https://github.com/insapathogenomics/ReporTree) following the cgMLST approach implemented in the [EFSA One Health WGS System]((https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), which relies on static cgMLST schemas available in https://chewbbaca.online. 
+The combined reports of this tool can be used for downstream clustering analysis using [ReporTree](https://github.com/insapathogenomics/ReporTree) following the cgMLST approach implemented in the [EFSA One Health WGS System](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), which relies on static cgMLST schemas available in https://chewbbaca.online. Here, we provide command line example that could be used to perform the clustering of the _S. enterica_ samples provided in _examples/_ using [ReporTree](https://github.com/insapathogenomics/ReporTree), as a downstream analysis of [example 2](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/edit/main/README.md#2-run-the-efsa_wgs_onehealth_facilitatorpy-script-on-a-single-sample-and-requesting-the-merge-of-the-results-with-a-previous-run):
 
-Example of ReporTree run:
+```
+python reportree.py 
+```
 
-    $ 
-
-List of schemas accepted by the EFSA One Health WGS system
-
-## Installation and dependencies
 
 
