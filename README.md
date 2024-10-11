@@ -15,7 +15,7 @@ With the aim of facilitating the deployment of the EFSA One Health WGS analytica
 This implementation can be useful for laboratories that want to: i) implement the EFSA pipeline in their routine activities; ii) perform sample submission by programmatic access to the EFSA One Health WGS System; iii) perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal; and iv) compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
 
 ## Installation and dependencies
-This script facilitates the deployment of the EFSA One Health WGS analytical pipeline but it does not substitutes this pipeline. Therefore, before installing everything that you need to run this script, **you must install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
+This script facilitates the deployment of the EFSA One Health WGS analytical pipeline, so **you must first install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
 
 Briefly, you will need:
 - A Linux computer or a Windows computer with WSL 
@@ -27,7 +27,7 @@ _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda
 
 **0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _nextflow.config_ for each species, including providing the right schema location)
   
-**1. Navigate to the directory where you cloned the workflow, clone of this repository and install the conda environment:**
+**1. Navigate to the directory where you cloned the EFSA workflow, clone of this repository and install the conda environment:**
 ```
 cd /PATH/TO/efsa.wgs.onehealth/
 git clone https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator.git
@@ -81,9 +81,25 @@ OUTPUT/ # Folder where the different runs are stored (it must already exist). In
         |___efsa_output/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
  ```
 The directory with the fastq files or the template.tsv with all sample information can be placed anywhere in your computer. You just need to indicate the full path.
+
 ## Examples
 
-In the _examples/_ folder we provide a set of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) for _L. monocytogenes_, _S. enterica_ and _E.coli_ that can be used to try the script. Here, we provide command line examples for the _S. enterica_ data.
+In the _examples/_ folder we provide examples for sets of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) of _L. monocytogenes_, _S. enterica_ and _E.coli_. Here, we provide command line examples for the _S. enterica_ data. If you want to reproduce the examples of this repository, please download the FASTQ files we used from [ENA](https://www.ebi.ac.uk/ena/browser/home) and place them in the respective folder:
+  
+**_Listeria monocytogenes_**  
+ERR10439060 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
+ERR10439063 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
+ERR10439068 (examples/lmonocytogenes/lmonocytogenes_fastq_test2/)   
+  
+**_Salmonella enterica_**  
+ERR10441970 (examples/senterica/senterica_fastq_test1/)  
+ERR10441971 (examples/senterica/senterica_fastq_test1/)  
+ERR10441976 (examples/senterica/senterica_fastq_test2/)  
+
+**_Escherichia coli_**	  
+ERR10434717 (examples/ecoli/ecoli_fastq_test1/)  
+ERR10434719 (examples/ecoli/ecoli_fastq_test1/)  
+ERR10434720 (examples/ecoli/ecoli_fastq_test2/)  
 
 #### 1. Run the _efsa_wgs_onehealth_facilitator.py_ script on multiple samples:
  ```
