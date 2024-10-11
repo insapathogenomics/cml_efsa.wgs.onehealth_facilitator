@@ -167,7 +167,7 @@ _NOTE: All the reports provided in test2/, as well as the allele hash, have the 
 The combined reports of this tool can be used for downstream clustering analysis using [ReporTree](https://github.com/insapathogenomics/ReporTree) following the cgMLST approach implemented in the [EFSA One Health WGS System](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), which relies on static cgMLST schemas available in https://chewbbaca.online. Here, we provide command line example that could be used to perform the clustering of the _S. enterica_ samples provided in _examples/_ using [ReporTree](https://github.com/insapathogenomics/ReporTree), as a downstream analysis of [example 2](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/edit/main/README.md#2-run-the-efsa_wgs_onehealth_facilitatorpy-script-on-a-single-sample-and-requesting-the-merge-of-the-results-with-a-previous-run):
 
 ```
-python reportree.py 
+python reportree.py -a examples/senterica/test2/alleles.tsv -m examples/senterica/test2/summary.tsv -out examples/senterica/reportree/test2 --analysis grapetree --columns_summary_report ST
 ```
 
 ## Usage
