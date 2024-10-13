@@ -25,7 +25,7 @@ This script facilitates the deployment of the EFSA One Health WGS analytical pip
 Briefly, you will need:
 - A Linux computer or a Windows computer with WSL 
 - Git - to clone the EFSA One Health WGS analytical workflow and the Docker repositories
-- Docker - to build and then run the Docker images
+- Docker - to build and then run the EFSA Docker images
 - Conda - to install the environment with which you will run the script provided in this repository
 
 _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda environment provided in this repository includes a Nextflow package. Therefore, you do not need to install it before._

@@ -346,6 +346,7 @@ def main():
 		sys.exit("There is another run with the same name... I cannot proceed :-( please remove the previous run or choose a different run name!")
 
 	print("\n******************** efsa_wgs_onehealth_facilitator.py ********************\n")
+
 	print("version " + str(version) + " last updated on " + str(last_updated) + "\n")
 	print(" ".join(sys.argv))
 	
