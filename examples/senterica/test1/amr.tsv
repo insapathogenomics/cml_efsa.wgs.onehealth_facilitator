@@ -1,0 +1,18 @@
+Analysis_ID	type	phenotypes	substitution	deletion	insertion	ref_start_pos	ref_end_pos	ref_codon	var_codon	ref_id	key	seq_var	ref_database	Gene	ref_aa	var_aa	codon_change
+ERR10441970	seq_variation	-	True	False	False	249	249	t	a	16S_rrsD_249_a	16S_rrsD_249_a	r.249T>A	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441970	seq_variation	-	True	False	False	28	28	ttc	ctc	acrB_28_l	acrB_28_l	p.F28L	PointFinder-EFSA_Latest	acrB	f	l	ttc>ctc
+ERR10441970	seq_variation	-	True	False	False	40	40	cta	cca	acrB_40_p	acrB_40_p	p.L40P	PointFinder-EFSA_Latest	acrB	l	p	cta>cca
+ERR10441970	seq_variation	-	True	False	False	569	569	cag	tag	acrB_569_*	acrB_569_*	p.Q569* - Premature stop codon	PointFinder-EFSA_Latest	acrB	q	*	cag>tag
+ERR10441970	seq_variation	-	True	False	False	255	255	acc	tcc	parC_255_s	parC_255_s	p.T255S	PointFinder-EFSA_Latest	parC	t	s	acc>tcc
+ERR10441970	seq_variation	-	True	False	False	395	395	aac	agc	parC_395_s	parC_395_s	p.N395S	PointFinder-EFSA_Latest	parC	n	s	aac>agc
+ERR10441970	seq_variation	-	True	False	False	469	469	tcc	gcc	parC_469_a	parC_469_a	p.S469A	PointFinder-EFSA_Latest	parC	s	a	tcc>gcc
+ERR10441970	seq_variation	-	True	False	False	620	620	gcg	aca	parC_620_t	parC_620_t	p.A620T	PointFinder-EFSA_Latest	parC	a	t	gcg>aca
+ERR10441971	seq_variation	-	True	False	False	92	92	c	t	16S_rrsD_92_t	16S_rrsD_92_t	r.92C>T	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1005	1005	c	g	16S_rrsD_1005_g	16S_rrsD_1005_g	r.1005C>G	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1006	1006	t	a	16S_rrsD_1006_a	16S_rrsD_1006_a	r.1006T>A	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1007	1007	t	a	16S_rrsD_1007_a	16S_rrsD_1007_a	r.1007T>A	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1022	1022	g	t	16S_rrsD_1022_t	16S_rrsD_1022_t	r.1022G>T	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1133	1133	a	g	16S_rrsD_1133_g	16S_rrsD_1133_g	r.1133A>G	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	1139	1139	t	c	16S_rrsD_1139_c	16S_rrsD_1139_c	r.1139T>C	PointFinder-EFSA_Latest	16S_rrsD	-	-	-
+ERR10441971	seq_variation	-	True	False	False	28	28	ttc	ctc	acrB_28_l	acrB_28_l	p.F28L	PointFinder-EFSA_Latest	acrB	f	l	ttc>ctc
+ERR10441971	seq_variation	-	True	False	False	40	40	cta	cca	acrB_40_p	acrB_40_p	p.L40P	PointFinder-EFSA_Latest	acrB	l	p	cta>cca
