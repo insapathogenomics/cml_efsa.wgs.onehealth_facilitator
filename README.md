@@ -72,6 +72,12 @@ _NOTE: Each Excel sheet corresponds to the respective .tsv file. However, we are
 
 ## Folder structure
 This script assumes the following folder structure for input/output files:
+
+
+```
+INPUT/ # Folder with the fastq.gz files OR the template.tsv with the sample(s) names and the full path where fastq.gz are placed in your computer (it can be anywhere).
+ ```
+
 ```
 OUTPUT/ # Folder where the different runs are stored (it must already exist). In a surveillance scenario, it would correspond to the folder where all the runs of a given species are stored.
 |___RUN1/ # Folder where the results of run1 are stored (it will be created by the script).
@@ -85,7 +91,6 @@ OUTPUT/ # Folder where the different runs are stored (it must already exist). In
         |___Sample1_R*.fastq.gz # Copy of the fastq files provided by the user.
         |___efsa_output/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
  ```
-The directory with the fastq files or the template.tsv with all sample information can be placed anywhere in your computer. You just need to indicate the full path.
 
 ## Examples
 
