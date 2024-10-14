@@ -220,7 +220,7 @@ From our experience, performing parallel analyses with the EFSA One Health WGS a
 
 If you use this tool, **please do not forget to cite this repository!**
 
-Verónica Mixão, João Dourado Santos, Vítor Borges. 2024. Facilitator of the local deployment of the EFSA Whole-Genome Sequencing One Health analytical pipeline. https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator
+Verónica Mixão, João Dourado Santos, Vítor Borges. 2024. Facilitator of the local deployment of the EFSA One Health Whole-Genome Sequencing analytical pipeline. https://github.com/insapathogenomics/cml_efsa.wgs.onehealth_facilitator
 
   
 ## Funding
