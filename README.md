@@ -1,4 +1,4 @@
-# Facilitator of the local deployment of the EFSA Whole-Genome Sequencing One Health analytical pipeline
+# Facilitator of the local deployment of the EFSA One Health Whole-Genome Sequencing analytical pipeline
 
 The European Food Safety Authority (EFSA) has recently defined the [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), and released the EFSA One Health WGS analytical pipeline for the analysis of whole-genome sequencing (WGS) data of _Listeria monocytogenes_, _Salmonella enterica_ and _Escherichia coli_. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
 
