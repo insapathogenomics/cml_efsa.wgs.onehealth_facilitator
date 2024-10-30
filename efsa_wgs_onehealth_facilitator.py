@@ -15,8 +15,8 @@ import datetime as datetime
 import pandas
 from efsa_parser import EfsaResults
 
-version = "1.0.0b"
-last_updated = "2024-10-10"
+version = "1.0.1"
+last_updated = "2024-10-30"
 
 script_location = os.path.realpath(__file__)
 script_path = script_location.rsplit("/", 2)[0]
@@ -120,7 +120,7 @@ def join_allele_matrices(sample_dirs, previous_run):
 	
 	return df
 
-def join_reports_efsa_parser(out_dir, sample_dirs, run_name):
+def join_reports_efsa_parser(out_dir, sample_dirs, run_name, species, species_code):
 	""" This function joins the reports of a given run with the efsa parser """
 	
 	dir_to_sample = {}
@@ -137,7 +137,7 @@ def join_reports_efsa_parser(out_dir, sample_dirs, run_name):
 		elif counter == 0:
 			failed[sample_name] = directory
 	if len(dir_to_sample.keys()) > 0:
-		output_file = out_dir + "/" + run_name + "/" + run_name + "_report.xlsx"
+		output_file = out_dir + "/" + run_name + "/" + str(species_code[species]) + "_" + run_name + "_report.xlsx"
 		outputs_directory = out_dir + "/" + run_name
 		results = EfsaResults(dir_to_sample, outputs_directory, output_file)
 		results.parse_all_results()
@@ -148,7 +148,7 @@ def join_reports_efsa_parser(out_dir, sample_dirs, run_name):
 
 	return failed, run_successful_samples
 
-def prepare_final_reports(out_dir, run_name, failed, previous_run, run_successful_samples):
+def prepare_final_reports(out_dir, run_name, failed, previous_run, run_successful_samples, species, species_code):
 	""" This function adds QC information to the summary report """
 
 	passed_qc = []
@@ -230,12 +230,12 @@ def prepare_final_reports(out_dir, run_name, failed, previous_run, run_successfu
 		final_amr = amr_tsv
 		final_pathotyping = pathotyping_tsv
 	
-	final_summary.to_csv(out_dir + "/" + run_name + "/summary.tsv", index = False, header=True, sep ="\t")
-	final_mlst.to_csv(out_dir + "/" + run_name + "/mlst.tsv", index = False, header=True, sep ="\t")
-	final_amr.to_csv(out_dir + "/" + run_name + "/amr.tsv", index = False, header=True, sep ="\t")
-	final_pathotyping.to_csv(out_dir + "/" + run_name + "/pathotypes.tsv", index = False, header=True, sep ="\t")
+	final_summary.to_csv(out_dir + "/" + str(run_name) + "/summary.tsv", index = False, header=True, sep ="\t")
+	final_mlst.to_csv(out_dir + "/" + str(run_name) + "/mlst.tsv", index = False, header=True, sep ="\t")
+	final_amr.to_csv(out_dir + "/" + str(run_name) + "/amr.tsv", index = False, header=True, sep ="\t")
+	final_pathotyping.to_csv(out_dir + "/" + str(run_name) + "/pathotypes.tsv", index = False, header=True, sep ="\t")
 
-	with pandas.ExcelWriter(out_dir + "/" + run_name + "/" + run_name + "_report.xlsx") as writer:
+	with pandas.ExcelWriter(out_dir + "/" + str(run_name) + "/" + str(species_code[species]) + "_" + run_name + "_report.xlsx") as writer:
 		final_summary.to_excel(writer, sheet_name = "Summary", index = False)
 		final_mlst.to_excel(writer, sheet_name = "MLST", index = False)
 		final_amr.to_excel(writer, sheet_name = "AMR", index = False)
@@ -359,6 +359,8 @@ def main():
 	start = datetime.datetime.now()
 	print("start: " + str(start))
 	
+	species_code = {"listeria monocytogenes": "Lm", "salmonella enterica": "Se", "escherichia coli": "Ec"}
+
 	if not args.only_reports:
 		print("\nCreating the run directory...")
 		os.system("mkdir " + args.output + "/" + args.run_name)
@@ -375,7 +377,7 @@ def main():
 		os.system("rm " + args.output + "/" + args.run_name + "/mlst.tsv")
 		os.system("rm " + args.output + "/" + args.run_name + "/amr.tsv")
 		os.system("rm " + args.output + "/" + args.run_name + "/pathotypes.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/" + args.run_name + "_report.xlsx")
+		os.system("rm " + args.output + "/" + args.run_name + "/" + str(species_code[args.species]) + "_" + args.run_name + "_report.xlsx")
 		
 	print("\nMerging allele matrices...")
 	allele_matrix = join_allele_matrices(sample_dirs, args.previous_run)
@@ -383,8 +385,8 @@ def main():
 	
 	print("\nMerging reports...")
 	
-	failed, run_successful_samples = join_reports_efsa_parser(args.output, sample_dirs, args.run_name)
-	prepare_final_reports(args.output, args.run_name, failed, args.previous_run, run_successful_samples)
+	failed, run_successful_samples = join_reports_efsa_parser(args.output, sample_dirs, args.run_name, args.species, species_code)
+	prepare_final_reports(args.output, args.run_name, failed, args.previous_run, run_successful_samples, args.species, species_code)
 
 	end = datetime.datetime.now()
 	elapsed = end - start
