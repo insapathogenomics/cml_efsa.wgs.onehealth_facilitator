@@ -12,11 +12,12 @@ import argparse
 import textwrap
 import glob
 import datetime as datetime
+import subprocess
 import pandas
 from efsa_parser import EfsaResults
 
-version = "1.0.1"
-last_updated = "2024-10-30"
+version = "2.0.0"
+last_updated = "2026-10-14"
 
 script_location = os.path.realpath(__file__)
 script_path = script_location.rsplit("/", 2)[0]
@@ -41,9 +42,10 @@ def distribute_fastq(fastq_directory, samples_info, outdir, only_reports):
 				sample_dirs.append(sample_dir)
 				sample_names[sample_dir] = sample
 				if not only_reports:
-					os.system("mkdir " + sample_dir)
+					os.makedirs(sample_dir, exist_ok=True)
 			if not only_reports:
-				os.system("cp " + fastq_directory + "/" + sample + "* " + sample_dir)
+				for fastq_file in glob.glob(os.path.join(fastq_directory, sample + "*")):
+					subprocess.run(["mv", fastq_file, sample_dir], check=True)
 	elif samples_info != "":
 		with open(samples_info) as infile:
 			lines = infile.readlines()
@@ -58,21 +60,43 @@ def distribute_fastq(fastq_directory, samples_info, outdir, only_reports):
 					sample_dirs.append(sample_dir)
 					sample_names[sample_dir] = sample
 					if not only_reports:
-						os.system("mkdir " + sample_dir)
+						os.makedirs(sample_dir, exist_ok=True)
 				if not only_reports:
-					os.system("cp " + fq1 + " " + sample_dir)
-					os.system("cp " + fq2 + " " + sample_dir)
+					subprocess.run(["cp", fq1, sample_dir], check=True)
+					subprocess.run(["cp", fq2, sample_dir], check=True)
    
 	return sample_dirs, sample_names
 
 def run_efsa_pipeline(sample_dir, nextflow_config, species):
     """ This function runs the EFSA command line pipeline """
 
-    cmd = "cd " + sample_dir + "; nextflow -C '" + nextflow_config + "' run " + efsa_workflow + " --readType='dual' --species='" + species + "' --indir '.' --outdir '.'; cd ../../.."
-    print("\tRunning EFSA pipeline with the following command:\n\t",cmd,"\n")
-    returned_value = os.system(cmd)
+    cmd = [
+        "nextflow", "-C", nextflow_config, "run", efsa_workflow,
+        "--readType=dual", "--species=" + species, "--indir", ".", "--outdir", "."
+    ]
+    print("\tRunning EFSA pipeline with the following command:\n\t", subprocess.list2cmdline(cmd), "\n")
+    returned_value = subprocess.run(cmd, cwd=sample_dir).returncode
 
     return returned_value
+
+def convert_locus_names(allele_matrix, locus_conversion_file):
+    """Convert Chewie locus names to EFSA locus names. Loci that are already using their EFSA name are left unchanged. """
+
+    locus_conversion = pandas.read_table(locus_conversion_file, dtype=str, header=0)
+
+    locus_conversion_dict = dict(zip(locus_conversion.iloc[:, 0], locus_conversion.iloc[:, 2]))
+    existing_columns = set(allele_matrix.columns)
+
+    rename_dict = {
+        chewie_locus: efsa_locus
+        for chewie_locus, efsa_locus in locus_conversion_dict.items()
+        if chewie_locus in existing_columns
+        and efsa_locus not in existing_columns
+    }
+
+    allele_matrix.rename(columns=rename_dict, inplace=True)
+    
+    return allele_matrix
 
 def join_df(old_df,new_df):
 	""" This function joins two dataframes
@@ -87,16 +111,18 @@ def join_df(old_df,new_df):
 
 	return final_df
 	
-def join_allele_matrices(sample_dirs, previous_run):
+def join_allele_matrices(sample_dirs, previous_run, locus_conversion_file):
 	""" This function joins all allele matrices  """
 	
 	if previous_run != "":
 		df = pandas.read_table(previous_run + "/alleles.tsv", dtype=str)
+		df = convert_locus_names(df, locus_conversion_file)
 	else:
 		df = pandas.DataFrame()
 
 	for directory in sample_dirs:
 		counter = 0
+		sample = directory.split("/")[-1]
 		for filename in glob.glob(directory + "/*/_hashed_results.tsv"):
 			counter += 1
 		if counter == 0:
@@ -106,10 +132,14 @@ def join_allele_matrices(sample_dirs, previous_run):
 		else:
 			if len(df.columns) == 0:
 				df = pandas.read_table(filename, dtype=str)
-				df[df.columns[0]][0] = df[df.columns[0]][0].split("_contigs.fa")[0]
+				if locus_conversion_file != "":
+					df = convert_locus_names(df, locus_conversion_file)
+				df[df.columns[0]][0] = sample
 			else:
 				new_df = pandas.read_table(filename, dtype = str)
-				new_df[new_df.columns[0]][0] = new_df[new_df.columns[0]][0].split("_contigs.fa")[0]
+				if locus_conversion_file != "":
+					new_df = convert_locus_names(new_df, locus_conversion_file)
+				new_df[new_df.columns[0]][0] = sample
 				if len(set(df.columns) - set(new_df.columns)) == 0 and len(set(new_df.columns) - set(df.columns)) == 0:
 					if new_df[new_df.columns[0]][0] not in df[df.columns[0]].values.tolist():
 						df = join_df(df,new_df)
@@ -313,7 +343,7 @@ def main():
 	
 	group0 = parser.add_argument_group("Input/Output", "Input/Output specifications")
 	group0.add_argument("-f", "--fastq", dest="fastq", default="", type=str, help="Directory with the fastq files for this run. Sample names will be \
-						inferred from the FASTQ name until the first underscore '_'. This argument is mandatory if no '--sample-info' is provided.")
+						inferred from the FASTQ name until the first underscore '_'. This argument is mandatory if '--samples' argument is not provided.")
 	group0.add_argument("-samples", "--samples", dest="sample_info", default="", type=str, help="TSV file with the indication of sample name and the \
 						complete PATH to fastq1 and fastq2 (sample\tfq1\tfq2). This argument is mandatory, if no '--fastq' is provided. Please note that \
 						no header is expected and sample names can follow any format as far as they do not have blank spaces ' '.")
@@ -324,10 +354,13 @@ def main():
 					 	available for: 'listeria monocytogenes', 'salmonella enterica' and 'escherichia coli'). Please indicate the name of the species \
 						between quotation marks.")
 	group0.add_argument("-nf", "--nextflow-config", dest="nextflow_config", default="", type=str, help="[MANDATORY] Full PATH to the nextflow config.")
+	group0.add_argument("-l", "--locus-conversion", dest="locus_conversion", default="", type=str, help="[OPTIONAL] Full PATH to the locus conversion file in TSV format. \
+	                    This file is used to convert the locus names of the allele hash files obtained with a chewie-NS schema into the locus names recognized by the EFSA \
+	                    platform.")
 	group0.add_argument("--previous-run", dest="previous_run", default="", type=str, help="[OPTIONAL] FULL PATH to a previous run (the reports of the present run \
 					 	will be added to the reports of this previous run). Please do not include a final slash '/' in the directory name.")
-	group0.add_argument("--only-reports", dest="only_reports", required=False, action="store_true", help="[OPTIONAL] Set only if you already have a run and just want to generate the \
-						reports. This argument must be used carefully as it assumes a folder structure similar to the one generated by the script.")
+	group0.add_argument("--only-reports", dest="only_reports", required=False, action="store_true", help="[OPTIONAL] Set only if you already have a run and just \
+	                    want to generate the reports. This argument must be used carefully as it assumes a folder structure similar to the one generated by the script.")
 
 	args = parser.parse_args()
 
@@ -363,7 +396,7 @@ def main():
 
 	if not args.only_reports:
 		print("\nCreating the run directory...")
-		os.system("mkdir " + args.output + "/" + args.run_name)
+		os.makedirs(args.output + "/" + args.run_name, exist_ok=True)
 	sample_dirs, sample_names = distribute_fastq(args.fastq, args.sample_info, args.output + "/" + args.run_name, args.only_reports)
 	
 	if not args.only_reports:
@@ -372,15 +405,14 @@ def main():
 			run_status = run_efsa_pipeline(directory, args.nextflow_config, args.species)
 	
 	if args.only_reports:
-		os.system("rm " + args.output + "/" + args.run_name + "/alleles.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/summary.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/mlst.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/amr.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/pathotypes.tsv")
-		os.system("rm " + args.output + "/" + args.run_name + "/" + str(species_code[args.species]) + "_" + args.run_name + "_report.xlsx")
-		
+		for report_name in ("alleles.tsv", "summary.tsv", "mlst.tsv", "amr.tsv", "pathotypes.tsv", str(species_code[args.species]) + "_" + args.run_name + "_report.xlsx"):
+			try:
+				os.remove(os.path.join(args.output, args.run_name, report_name))
+			except FileNotFoundError:
+				pass
+	
 	print("\nMerging allele matrices...")
-	allele_matrix = join_allele_matrices(sample_dirs, args.previous_run)
+	allele_matrix = join_allele_matrices(sample_dirs, args.previous_run, args.locus_conversion)
 	allele_matrix.to_csv(args.output + "/" + args.run_name + "/alleles.tsv", index = False, header=True, sep ="\t")
 	
 	print("\nMerging reports...")
