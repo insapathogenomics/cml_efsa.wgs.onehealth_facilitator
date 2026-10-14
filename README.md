@@ -1,14 +1,13 @@
 # Facilitator of the local deployment of the EFSA One Health Whole-Genome Sequencing analytical pipeline
   
-  
-## ATENTION!! WE ARE WORKING ON A NEW UPDATE TO ACCOMODATE THE CHANGES INTRODUCED IN THE NEW VERSION OF THE EFSA PIPELINE RELEASED ON 22-04-2026. NEWS COMING SOON!! 
-
-    
-The European Food Safety Authority (EFSA) has recently defined the [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), and released the EFSA One Health WGS analytical pipeline for the analysis of whole-genome sequencing (WGS) data of _Listeria monocytogenes_, _Salmonella enterica_ and _Escherichia coli_. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
+### Compatible with EFSA One Health WGS analytical pipeline v3.0.0 (released on 2026-05-22) 
 
 ## Motivation
 
-With the aim of facilitating the deployment of the EFSA One Health WGS analytical pipeline in local settings, we share an easy-to-use and surveillance-oriented script that: 
+The European Food Safety Authority (EFSA) has recently defined the [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413) and, more recently, the ["Guidelines for reporting Whole Genome Sequencing-Based Typing Data via the EFSA WGS System under Commission Implementing Regulation (EU)2025/179 and for general monitoring purposes"](https://efsa.onlinelibrary.wiley.com/doi/epdf/10.2903/sp.efsa.2025.EN-9830). 
+  
+In this context, the EFSA One Health WGS analytical pipeline was released for the analysis of whole-genome sequencing (WGS) data of _Listeria monocytogenes_, _Salmonella enterica_, _Escherichia coli_ and _Campylobacter spp._. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download and local installation through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
+With the aim of facilitating the deployment of the EFSA One Health WGS analytical pipeline in local settings, in this repository we share an easy-to-use and surveillance-oriented script that: 
 
 - allows providing **multiple samples** as input (**batch analysis**)
   
@@ -22,6 +21,7 @@ This implementation can be useful for laboratories that want to:
 - perform sample submission by programmatic access to the EFSA One Health WGS System; 
 - perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal;
 - compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
+- use this pipeline for acreditation purposes.
 
 ## Installation and dependencies
 This script facilitates the deployment of the EFSA One Health WGS analytical pipeline, so **you must first install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
@@ -34,7 +34,9 @@ Briefly, you will need:
 
 _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda environment provided in this repository includes a Nextflow package. Therefore, you do not need to install it before._
 
-**0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _nextflow.config_ for each species, including providing the right schema location)
+**0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _configs/params.config_, _configs/nextflow.config_ and the _config/params_*.config_ files, including providing the right schema location)
+
+_Note: We had some doubts while installing the EFSA pipeline. We compiled them in this file, hoping to help you, if you have similar questions._
   
 **1. Navigate to the directory where you cloned the EFSA workflow, clone of this repository and install the conda environment:**
 ```
