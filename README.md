@@ -20,7 +20,7 @@ This implementation can be useful for laboratories that want to:
 - implement the EFSA pipeline in their routine activities;
 - perform sample submission by programmatic access to the EFSA One Health WGS System; 
 - perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal;
-- compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
+- compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available through [ACDTree](https://github.com/insapathogenomics/ACDTree) can facilitate the later.
 - use this pipeline for acreditation purposes.
 
 ## Installation and dependencies
@@ -98,89 +98,6 @@ OUTPUT/ # Folder where the different runs are stored (it must already exist). In
         |___efsa_output/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
  ```
 
-## Examples
-
-In the _examples/_ folder we provide examples for sets of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) of _L. monocytogenes_, _S. enterica_ and _E.coli_. Here, we provide command line examples for the _S. enterica_ data. If you want to reproduce the examples of this repository, please download the FASTQ files we used from [ENA](https://www.ebi.ac.uk/ena/browser/home) and place them in the respective folder:
-  
-**_Listeria monocytogenes_**  
-ERR10439060 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
-ERR10439063 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
-ERR10439068 (examples/lmonocytogenes/lmonocytogenes_fastq_test2/)   
-  
-**_Salmonella enterica_**  
-ERR10441970 (examples/senterica/senterica_fastq_test1/)  
-ERR10441971 (examples/senterica/senterica_fastq_test1/)  
-ERR10441976 (examples/senterica/senterica_fastq_test2/)  
-
-**_Escherichia coli_**	  
-ERR10434717 (examples/ecoli/ecoli_fastq_test1/)  
-ERR10434719 (examples/ecoli/ecoli_fastq_test1/)  
-ERR10434720 (examples/ecoli/ecoli_fastq_test2/)  
-
-#### 1. Run the _efsa_wgs_onehealth_facilitator.py_ script on multiple samples:
- ```
-python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test1 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config
-```
-
-After running this example, you should have the following outputs:
-```
-senterica/
-|___test1/
-    |___alleles.tsv
-    |___test1_report.xlsx
-    |___summary.tsv
-    |___mlst.tsv
-    |___amr.tsv
-    |___pathotypes.tsv
-    |___ERR10441970/
-        |___ERR10441970_*.fastq.gz
-        |___folder_with_random_name/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
-    |___ERR10441971/
-        |___ERR10441971_*.fastq.gz
-        |___folder_with_random_name/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
-```
-
-#### 2. Run the _efsa_wgs_onehealth_facilitator.py_ script on a single sample and requesting the merge of the results with a previous run:
- ```
-python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run test1
-```
-This example can only be run after the previous run was completed. After running this example, you should have the following outputs:
-```
-senterica/
-|___test1/
-    |___alleles.tsv
-    |___test1_report.xlsx
-    |___summary.tsv
-    |___mlst.tsv
-    |___amr.tsv
-    |___pathotypes.tsv
-    |___ERR10441970/
-        |___ERR10441970_*.fastq.gz
-        |___efsa_folder_with_random_name/
-    |___ERR10441971/
-        |___ERR10441971_*.fastq.gz
-        |___efsa_folder_with_random_name/
-|___test2/
-    |___alleles.tsv
-    |___test2_report.xlsx
-    |___summary.tsv
-    |___mlst.tsv
-    |___amr.tsv
-    |___pathotypes.tsv
-    |___ERR10441976/
-        |___ERR10441976_*.fastq.gz
-        |___efsa_folder_with_random_name/
-```
-_NOTE: All the reports provided in test2/, as well as the allele hash, have the cumulative results of test1 and test2 runs._
-
-## Clustering analysis with [ReporTree](https://github.com/insapathogenomics/ReporTree)
-
-The combined reports of this tool can be used for downstream clustering analysis using [ReporTree](https://github.com/insapathogenomics/ReporTree) following the cgMLST approach implemented in the [EFSA One Health WGS System](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), which relies on static cgMLST schemas available in https://chewbbaca.online. Here, we provide command line example that could be used to perform the clustering of the _S. enterica_ samples provided in _examples/_ using [ReporTree](https://github.com/insapathogenomics/ReporTree), as a downstream analysis of [example 2](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/edit/main/README.md#2-run-the-efsa_wgs_onehealth_facilitatorpy-script-on-a-single-sample-and-requesting-the-merge-of-the-results-with-a-previous-run):
-
-```
-python reportree.py -a examples/senterica/test2/alleles.tsv -m examples/senterica/test2/summary.tsv -out examples/senterica/reportree/test2 --analysis grapetree --columns_summary_report ST
-```
-
 ## Usage
 ```
 optional arguments:
@@ -219,9 +136,94 @@ Input/Output:
                         to the one generated by the script.
 ```
 
-#### Technical notes
+### Technical notes
 
-From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
+1. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats) and intend to submit the allele matrix to EFSA One Health WGS system, you will probably need to convert the loci names to the loci nomenclature used by EFSA. To do so, you can use the information provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917). If you run the _efsa_wgs_onehealth_facilitator.py_ script you can provide the *_loci_IDs_mapping.tsv file provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917) to the '--locus-conversion' argument and the tool will automatically convert the loci names for you. 
+     
+2. From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
+
+## Examples
+
+In the _examples/_ folder we provide examples for sets of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) of _L. monocytogenes_, _S. enterica_ and _E.coli_. Here, we provide command line examples for the _S. enterica_ data. If you want to reproduce the examples of this repository, please download the FASTQ files we used from [ENA](https://www.ebi.ac.uk/ena/browser/home) and place them in the respective folder:
+  
+**_Listeria monocytogenes_**  
+ERR10439060 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
+ERR10439063 (examples/lmonocytogenes/lmonocytogenes_fastq_test1/)  
+ERR10439068 (examples/lmonocytogenes/lmonocytogenes_fastq_test2/)   
+  
+**_Salmonella enterica_**  
+ERR10441970 (examples/senterica/senterica_fastq_test1/)  
+ERR10441971 (examples/senterica/senterica_fastq_test1/)  
+ERR10441976 (examples/senterica/senterica_fastq_test2/)  
+
+**_Escherichia coli_**	  
+ERR10434717 (examples/ecoli/ecoli_fastq_test1/)  
+ERR10434719 (examples/ecoli/ecoli_fastq_test1/)  
+ERR10434720 (examples/ecoli/ecoli_fastq_test2/)  
+
+#### 1. Run the _efsa_wgs_onehealth_facilitator.py_ script on multiple samples requesting the conversion of loci names:
+ ```
+python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test1 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config -l species14_Senterica_schema1_loci_IDs_mapping.tsv
+```
+
+After running this example, you should have the following outputs:
+```
+senterica/
+|___test1/
+    |___alleles.tsv
+    |___test1_report.xlsx
+    |___summary.tsv
+    |___mlst.tsv
+    |___amr.tsv
+    |___pathotypes.tsv
+    |___ERR10441970/
+        |___ERR10441970_*.fastq.gz
+        |___folder_with_random_name/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
+    |___ERR10441971/
+        |___ERR10441971_*.fastq.gz
+        |___folder_with_random_name/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
+```
+
+#### 2. Run the _efsa_wgs_onehealth_facilitator.py_ script on a single sample, requesting the merge of the results with a previous run and requesting the conversion of loci names:
+ ```
+python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run test1 -l species14_Senterica_schema1_loci_IDs_mapping.tsv
+```
+This example can only be run after the previous run was completed. After running this example, you should have the following outputs:
+```
+senterica/
+|___test1/
+    |___alleles.tsv
+    |___test1_report.xlsx
+    |___summary.tsv
+    |___mlst.tsv
+    |___amr.tsv
+    |___pathotypes.tsv
+    |___ERR10441970/
+        |___ERR10441970_*.fastq.gz
+        |___efsa_folder_with_random_name/
+    |___ERR10441971/
+        |___ERR10441971_*.fastq.gz
+        |___efsa_folder_with_random_name/
+|___test2/
+    |___alleles.tsv
+    |___test2_report.xlsx
+    |___summary.tsv
+    |___mlst.tsv
+    |___amr.tsv
+    |___pathotypes.tsv
+    |___ERR10441976/
+        |___ERR10441976_*.fastq.gz
+        |___efsa_folder_with_random_name/
+```
+_NOTE: All the reports provided in test2/, as well as the allele hash, have the cumulative results of test1 and test2 runs._
+
+## Clustering analysis with [ReporTree](https://github.com/insapathogenomics/ReporTree)
+
+The combined reports of this tool can be used for downstream clustering analysis using [ReporTree](https://github.com/insapathogenomics/ReporTree) following the cgMLST approach implemented in the [EFSA One Health WGS System](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), which relies on static cgMLST schemas available in https://chewbbaca.online. Here, we provide command line example that could be used to perform the clustering of the _S. enterica_ samples provided in _examples/_ using [ReporTree](https://github.com/insapathogenomics/ReporTree), as a downstream analysis of [example 2](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/edit/main/README.md#2-run-the-efsa_wgs_onehealth_facilitatorpy-script-on-a-single-sample-and-requesting-the-merge-of-the-results-with-a-previous-run):
+
+```
+python reportree.py -a examples/senterica/test2/alleles.tsv -m examples/senterica/test2/summary.tsv -out examples/senterica/reportree/test2 --analysis grapetree --columns_summary_report ST
+```
 
 ## Citation
 
