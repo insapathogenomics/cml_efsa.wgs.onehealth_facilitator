@@ -1,14 +1,13 @@
 # Facilitator of the local deployment of the EFSA One Health Whole-Genome Sequencing analytical pipeline
   
-  
-## ATENTION!! WE ARE WORKING ON A NEW UPDATE TO ACCOMODATE THE CHANGES INTRODUCED IN THE NEW VERSION OF THE EFSA PIPELINE RELEASED ON 22-04-2026. NEWS COMING SOON!! 
-
-    
-The European Food Safety Authority (EFSA) has recently defined the [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413), and released the EFSA One Health WGS analytical pipeline for the analysis of whole-genome sequencing (WGS) data of _Listeria monocytogenes_, _Salmonella enterica_ and _Escherichia coli_. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
+### Compatible with EFSA One Health WGS analytical pipeline v3.0.0 (released on 2026-05-22) 
 
 ## Motivation
 
-With the aim of facilitating the deployment of the EFSA One Health WGS analytical pipeline in local settings, we share an easy-to-use and surveillance-oriented script that: 
+The European Food Safety Authority (EFSA) has recently defined the [“Guidelines for reporting Whole Genome Sequencing-based typing data through the EFSA One Health WGS System”](https://efsa.onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2022.EN-7413) and, more recently, the ["Guidelines for reporting Whole Genome Sequencing-Based Typing Data via the EFSA WGS System under Commission Implementing Regulation (EU)2025/179 and for general monitoring purposes"](https://efsa.onlinelibrary.wiley.com/doi/epdf/10.2903/sp.efsa.2025.EN-9830). 
+  
+In this context, the EFSA One Health WGS analytical pipeline was released for the analysis of whole-genome sequencing (WGS) data of _Listeria monocytogenes_, _Salmonella enterica_, _Escherichia coli_ and _Campylobacter spp._. This pipeline can be run through the EFSA One Health WGS System Portal (exclusively for the officially appointed users), but is also available for download and local installation through the following repository: https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth.
+With the aim of facilitating the deployment of the EFSA One Health WGS analytical pipeline in local settings, in this repository we share an easy-to-use and surveillance-oriented script that: 
 
 - allows providing **multiple samples** as input (**batch analysis**)
   
@@ -21,7 +20,8 @@ This implementation can be useful for laboratories that want to:
 - implement the EFSA pipeline in their routine activities;
 - perform sample submission by programmatic access to the EFSA One Health WGS System; 
 - perform pre-submission quality control to avoid uploading bad quality data to the EFSA portal;
-- compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available in the repository ["WGS_cluster_congruence"](https://github.com/insapathogenomics/WGS_cluster_congruence) can facilitate the later.
+- compare the results of the EFSA pipeline with their own routine surveillance pipelines. The tools available through [ACDTree](https://github.com/insapathogenomics/ACDTree) can facilitate the later.
+- use this pipeline for acreditation purposes.
 
 ## Installation and dependencies
 This script facilitates the deployment of the EFSA One Health WGS analytical pipeline, so **you must first install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth**.
@@ -34,7 +34,9 @@ Briefly, you will need:
 
 _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda environment provided in this repository includes a Nextflow package. Therefore, you do not need to install it before._
 
-**0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _nextflow.config_ for each species, including providing the right schema location)
+**0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _configs/params.config_, _configs/nextflow.config_ and the _config/params_*.config_ files, including providing the right schema location)
+
+_Note: We had some doubts while installing the EFSA pipeline. We compiled them in [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf), hoping to help you, if you have similar questions._
   
 **1. Navigate to the directory where you cloned the EFSA workflow, clone of this repository and install the conda environment:**
 ```
@@ -53,6 +55,17 @@ conda activate efsa_workflow
 ```
 python efsa_wgs_onehealth_facilitator.py -v
 ```
+  
+**4. Double check that:**
+- All docker images are correctly built with the right tags (see Table 1 of [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf))
+- You downloaded the mlst database for your species of interest and indicated the path in _configs/params.config_
+- You downloaded the mash database and indicated the path for both files in _configs/params.config_
+- You downloaded the cgMLST schema for your species of interest and it is placed inside a folder named _schema_dir/_ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+
+**5. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats), do not forget to:**
+- Downloaded the loci name conversion table from [this Zenodo repository](https://doi.org/10.5281/zenodo.17084917) (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+- Download the cgMLST loci list from [ReporTree's GitHub](https://github.com/insapathogenomics/ReporTree/tree/main/useful_loci_lists) and place it inside the folder data/chewbbaca_filters/ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+
 
 ## Input
 
@@ -96,6 +109,50 @@ OUTPUT/ # Folder where the different runs are stored (it must already exist). In
         |___efsa_output/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
  ```
 
+## Usage
+```
+optional arguments:
+  -h, --help            show this help message and exit
+
+Version:
+  efsa_wgs_onehealth_facilitator.py
+
+  -v, --version         Print version and exit
+
+Input/Output:
+  Input/Output specifications
+
+  -f FASTQ, --fastq FASTQ
+                        Directory with the fastq files for this run. Sample names will be inferred from the FASTQ name until the first underscore '_'. This argument is mandatory if '--
+                        samples' argument is not provided.
+  -samples SAMPLE_INFO, --samples SAMPLE_INFO
+                        TSV file with the indication of sample name and the complete PATH to fastq1 and fastq2 (sample fq1 fq2). This argument is mandatory, if no '--fastq' is provided.
+                        Please note that no header is expected and sample names can follow any format as far as they do not have blank spaces ' '.
+  -o OUTPUT, --output OUTPUT
+                        [MANDATORY] FULL PATH to the directory where the results of each run are stored. Please do not include a final slash '/' in the directory name.
+  -r RUN_NAME, --run RUN_NAME
+                        Name of the run (default: run_efsa).
+  -s SPECIES, --species SPECIES
+                        [MANDATORY] Species name between quotation marks (currently only available for: 'listeria monocytogenes', 'salmonella enterica' and 'escherichia coli'). Please
+                        indicate the name of the species between quotation marks.
+  -nf NEXTFLOW_CONFIG, --nextflow-config NEXTFLOW_CONFIG
+                        [MANDATORY] Full PATH to the nextflow config.
+  -l LOCUS_CONVERSION, --locus-conversion LOCUS_CONVERSION
+                        [OPTIONAL] Full PATH to the locus conversion file in TSV format. This file is used to convert the locus names of the allele hash files obtained with a chewie-NS
+                        schema into the locus names recognized by the EFSA platform.
+  --previous-run PREVIOUS_RUN
+                        [OPTIONAL] FULL PATH to a previous run (the reports of the present run will be added to the reports of this previous run). Please do not include a final slash '/'
+                        in the directory name.
+  --only-reports        [OPTIONAL] Set only if you already have a run and just want to generate the reports. This argument must be used carefully as it assumes a folder structure similar
+                        to the one generated by the script.
+```
+
+### Technical notes
+
+1. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats) and intend to submit the allele matrix to EFSA One Health WGS system, you will probably need to convert the loci names to the loci nomenclature used by EFSA. To do so, you can use the information provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917). If you run the _efsa_wgs_onehealth_facilitator.py_ script you can provide the *_loci_IDs_mapping.tsv file provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917) to the '--locus-conversion' argument and the tool will automatically convert the loci names for you. If you intend to analyze _Salmonella enterica_ or Escherichia coli_ genomes, do not forget to obtain the cgMLST loci list from [ReporTree's GitHub](https://github.com/insapathogenomics/ReporTree/tree/main/useful_loci_lists) and place it inside the folder data/chewbbaca_filters/ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help).
+     
+2. From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
+
 ## Examples
 
 In the _examples/_ folder we provide examples for sets of public Illumina paired-end fastq files (retrieved from the public [BeONE](https://www.medrxiv.org/content/10.1101/2024.07.24.24310933v1) datasets) of _L. monocytogenes_, _S. enterica_ and _E.coli_. Here, we provide command line examples for the _S. enterica_ data. If you want to reproduce the examples of this repository, please download the FASTQ files we used from [ENA](https://www.ebi.ac.uk/ena/browser/home) and place them in the respective folder:
@@ -115,9 +172,9 @@ ERR10434717 (examples/ecoli/ecoli_fastq_test1/)
 ERR10434719 (examples/ecoli/ecoli_fastq_test1/)  
 ERR10434720 (examples/ecoli/ecoli_fastq_test2/)  
 
-#### 1. Run the _efsa_wgs_onehealth_facilitator.py_ script on multiple samples:
+#### 1. Run the _efsa_wgs_onehealth_facilitator.py_ script on multiple samples requesting the conversion of loci names:
  ```
-python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test1 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config
+python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test1 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config -l species14_Senterica_schema1_loci_IDs_mapping.tsv
 ```
 
 After running this example, you should have the following outputs:
@@ -138,9 +195,9 @@ senterica/
         |___folder_with_random_name/ # Folder with the results of EFSA pipeline. This folder will be created by EFSA pipeline and have a random name.
 ```
 
-#### 2. Run the _efsa_wgs_onehealth_facilitator.py_ script on a single sample and requesting the merge of the results with a previous run:
+#### 2. Run the _efsa_wgs_onehealth_facilitator.py_ script on a single sample, requesting the merge of the results with a previous run and requesting the conversion of loci names:
  ```
-python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run test1
+python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test2/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run examples/test1 -l species14_Senterica_schema1_loci_IDs_mapping.tsv
 ```
 This example can only be run after the previous run was completed. After running this example, you should have the following outputs:
 ```
@@ -178,47 +235,6 @@ The combined reports of this tool can be used for downstream clustering analysis
 ```
 python reportree.py -a examples/senterica/test2/alleles.tsv -m examples/senterica/test2/summary.tsv -out examples/senterica/reportree/test2 --analysis grapetree --columns_summary_report ST
 ```
-
-## Usage
-```
-optional arguments:
-  -h, --help            show this help message and exit
-
-Version:
-  efsa_wgs_onehealth_facilitator.py
-
-  -v, --version         Print version and exit
-
-Input/Output:
-  Input/Output specifications
-
-  -f FASTQ, --fastq FASTQ
-                        Directory with the fastq files for this run. Sample names will be inferred from the FASTQ name until the first underscore '_'.
-                        This argument is mandatory if no '--sample-info' is provided.
-  -samples SAMPLE_INFO, --samples SAMPLE_INFO
-                        TSV file with the indication of sample name and the complete PATH to fastq1 and fastq2 (sample fq1 fq2). This argument is
-                        mandatory, if no '--fastq' is provided. Please note that no header is expected and sample names can follow any format as far as
-                        they do not have blank spaces ' '.
-  -o OUTPUT, --output OUTPUT
-                        [MANDATORY] FULL PATH to the directory where the results of each run are stored. Please do not include a final slash '/' in the
-                        directory name.
-  -r RUN_NAME, --run RUN_NAME
-                        Name of the run (default: run_efsa).
-  -s SPECIES, --species SPECIES
-                        [MANDATORY] Species name between quotation marks (currently only available for: 'listeria monocytogenes', 'salmonella enterica'
-                        and 'escherichia coli'). Please indicate the name of the species between quotation marks.
-  -nf NEXTFLOW_CONFIG, --nextflow-config NEXTFLOW_CONFIG
-                        [MANDATORY] Full PATH to the nextflow config.
-  --previous-run PREVIOUS_RUN
-                        [OPTIONAL] FULL PATH to a previous run (the reports of the present run will be added to the reports of this previous run). Please
-                        do not include a final slash '/' in the directory name.
-  --only-reports        [OPTIONAL] Set only if you already have a run and just want to generate the reports. This argument must be used carefully as it
-                        assumes a folder structure similar to the one generated by the script.
-```
-
-#### Technical notes
-
-From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
 
 ## Citation
 
