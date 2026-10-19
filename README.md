@@ -186,7 +186,7 @@ senterica/
 
 #### 2. Run the _efsa_wgs_onehealth_facilitator.py_ script on a single sample, requesting the merge of the results with a previous run and requesting the conversion of loci names:
  ```
-python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test1/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run test1 -l species14_Senterica_schema1_loci_IDs_mapping.tsv
+python efsa_wgs_onehealth_facilitator.py -f examples/senterica/senterica_fastq_test2/ -o examples/senterica -r test2 -s 'salmonella enterica' -nf /FULL/PATH/TO/YOUR/nextflow.config --previous-run test1 -l species14_Senterica_schema1_loci_IDs_mapping.tsv
 ```
 This example can only be run after the previous run was completed. After running this example, you should have the following outputs:
 ```
