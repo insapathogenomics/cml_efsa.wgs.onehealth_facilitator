@@ -36,7 +36,7 @@ _Note: EFSA One Health WGS analytical pipeline is a Nextflow workflow. The conda
 
 **0. Install the EFSA One Health WGS analytical pipeline following the instructions available at https://dev.azure.com/efsa-devops/EFSA/_git/efsa.wgs.onehealth** (do not forget to properly setup the _configs/params.config_, _configs/nextflow.config_ and the _config/params_*.config_ files, including providing the right schema location)
 
-_Note: We had some doubts while installing the EFSA pipeline. We compiled them in this file, hoping to help you, if you have similar questions._
+_Note: We had some doubts while installing the EFSA pipeline. We compiled them in [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf), hoping to help you, if you have similar questions._
   
 **1. Navigate to the directory where you cloned the EFSA workflow, clone of this repository and install the conda environment:**
 ```
@@ -55,6 +55,17 @@ conda activate efsa_workflow
 ```
 python efsa_wgs_onehealth_facilitator.py -v
 ```
+  
+**4. Double check that:**
+- All docker images are correctly built with the right tags (see Table 1 of [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf))
+- You downloaded the mlst database for your species of interest and indicated the path in _configs/params.config_
+- You downloaded the mash database and indicated the path for both files in _configs/params.config_
+- You downloaded the cgMLST schema for your species of interest and it is placed inside a folder named _schema_dir/_ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+
+**5. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats), do not forget to:**
+- Downloaded the loci name conversion table from [this Zenodo repository](https://doi.org/10.5281/zenodo.17084917) (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+- Download the cgMLST loci list from [ReporTree's GitHub](https://github.com/insapathogenomics/ReporTree/tree/main/useful_loci_lists) and place it inside the folder data/chewbbaca_filters/ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help)
+
 
 ## Input
 
@@ -138,7 +149,7 @@ Input/Output:
 
 ### Technical notes
 
-1. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats) and intend to submit the allele matrix to EFSA One Health WGS system, you will probably need to convert the loci names to the loci nomenclature used by EFSA. To do so, you can use the information provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917). If you run the _efsa_wgs_onehealth_facilitator.py_ script you can provide the *_loci_IDs_mapping.tsv file provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917) to the '--locus-conversion' argument and the tool will automatically convert the loci names for you. 
+1. If you downloaded your cgMLST schema from [chewie-NS](https://chewbbaca.online/stats) and intend to submit the allele matrix to EFSA One Health WGS system, you will probably need to convert the loci names to the loci nomenclature used by EFSA. To do so, you can use the information provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917). If you run the _efsa_wgs_onehealth_facilitator.py_ script you can provide the *_loci_IDs_mapping.tsv file provided by the [chewie-NS team](https://doi.org/10.5281/zenodo.17084917) to the '--locus-conversion' argument and the tool will automatically convert the loci names for you. If you intend to analyze _Salmonella enterica_ or Escherichia coli_ genomes, do not forget to obtain the cgMLST loci list from [ReporTree's GitHub](https://github.com/insapathogenomics/ReporTree/tree/main/useful_loci_lists) and place it inside the folder data/chewbbaca_filters/ (check [this file](https://github.com/vmixao/cml_efsa.wgs.onehealth_facilitator/blob/main/EFSA_pipeline_installation_FAQ.pdf) for help).
      
 2. From our experience, performing parallel analyses with the EFSA One Health WGS analytical pipeline in the same computer often leads to some errors. Therefore, we strongly advise that you **do not launch this script in parallel** in the same machine.
 
