@@ -17,7 +17,7 @@ import pandas
 from efsa_parser import EfsaResults
 
 version = "2.0.0"
-last_updated = "2026-10-14"
+last_updated = "2026-10-19"
 
 script_location = os.path.realpath(__file__)
 script_path = script_location.rsplit("/", 2)[0]
@@ -45,7 +45,7 @@ def distribute_fastq(fastq_directory, samples_info, outdir, only_reports):
 					os.makedirs(sample_dir, exist_ok=True)
 			if not only_reports:
 				for fastq_file in glob.glob(os.path.join(fastq_directory, sample + "*")):
-					subprocess.run(["mv", fastq_file, sample_dir], check=True)
+					subprocess.run(["cp", fastq_file, sample_dir], check=True)
 	elif samples_info != "":
 		with open(samples_info) as infile:
 			lines = infile.readlines()
