@@ -16,8 +16,8 @@ import subprocess
 import pandas
 from efsa_parser import EfsaResults
 
-version = "2.0.0"
-last_updated = "2026-10-19"
+version = "2.0.1"
+last_updated = "2026-10-20"
 
 script_location = os.path.realpath(__file__)
 script_path = script_location.rsplit("/", 2)[0]
@@ -84,7 +84,8 @@ def convert_locus_names(allele_matrix, locus_conversion_file):
 
     locus_conversion = pandas.read_table(locus_conversion_file, dtype=str, header=0)
 
-    locus_conversion_dict = dict(zip(locus_conversion.iloc[:, 0], locus_conversion.iloc[:, 2]))
+    locus_conversion_dict = {f"{chewie_locus}.fasta": f"{efsa_locus}.fasta" for chewie_locus, efsa_locus in zip(locus_conversion.iloc[:, 0], locus_conversion.iloc[:, 2])}
+        
     existing_columns = set(allele_matrix.columns)
 
     rename_dict = {
